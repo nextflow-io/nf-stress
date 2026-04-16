@@ -18,7 +18,7 @@ process stress {
     script:
     """
     stress-ng --cpu ${task.cpus} \\
-              --vm 1 --vm-bytes ${task.memory.toBytes()} \\
+              --vm 1 --vm-bytes ${task.memory.toBytes()} --vm-hang 0 \\
               --timeout ${params.duration} \\
               --metrics-brief --verbose 2>&1 | tee stress.log
     """
