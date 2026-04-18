@@ -1,5 +1,3 @@
-nextflow.enable.dsl = 2
-
 params.requestCpus     = 1
 params.requestDuration = '60s'
 params.requestMemory   = '1 GB'
@@ -7,6 +5,7 @@ params.requestMemory   = '1 GB'
 params.usageCpus     = params.requestCpus
 params.usageDuration = params.requestDuration
 params.usageMemory   = params.requestMemory
+params.cpuLoad       = 100
 
 process stress {
     conda 'conda-forge::stress-ng'
@@ -24,7 +23,7 @@ process stress {
         ? params.usageMemory
         : new nextflow.util.MemoryUnit(params.usageMemory.toString())).toBytes()
     """
-    stress-ng --cpu ${params.usageCpus} \\
+    stress-ng --cpu ${params.usageCpus} --cpu-load ${params.cpuLoad} \\
               --vm 1 --vm-bytes ${usageMemoryBytes} --vm-hang 0 \\
               --timeout ${params.usageDuration} \\
               --metrics-brief --verbose 2>&1 | tee stress.log

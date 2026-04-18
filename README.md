@@ -32,6 +32,7 @@ The pipeline has two parameter groups:
 | `--usageCpus`       | `requestCpus`        | Number of CPU workers used by `stress-ng`               |
 | `--usageMemory`     | `requestMemory`      | Memory actually allocated by `stress-ng`                |
 | `--usageDuration`   | `requestDuration`    | How long `stress-ng` runs                               |
+| `--cpuLoad`         | `100`                | Per-worker CPU load percentage (0–100)                  |
 
 ## Requirements
 
