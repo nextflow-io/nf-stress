@@ -6,18 +6,32 @@ Uses [`stress-ng`](https://github.com/ColinIanKing/stress-ng) from conda-forge; 
 ## Usage
 
 ```bash
-nextflow run . --duration 2m --cpus 4 --memory '2 GB'
+nextflow run . --requestCpus 4 --requestMemory '2 GB' --requestDuration 2m
+```
+
+To request more resources than the workload actually consumes (e.g. to simulate over-provisioning), set the `usage*` params explicitly:
+
+```bash
+nextflow run . \
+    --requestCpus 4 --requestMemory '4 GB' --requestDuration 5m \
+    --usageCpus   2 --usageMemory   '2 GB' --usageDuration   2m
 ```
 
 ### Parameters
 
-| Param       | Default | Description                                  |
-|-------------|---------|----------------------------------------------|
-| `--duration`| `60s`   | How long to run the stressor (`30s`, `2m`, …)|
-| `--cpus`    | `1`     | Number of CPU workers (also sets `cpus` directive) |
-| `--memory`  | `1 GB`  | Memory to allocate (also sets `memory` directive)  |
+The pipeline has two parameter groups:
 
-The `time` directive is set to `duration + 30s` to leave scheduler headroom.
+- **`request*`** — drive the Nextflow process directives (`cpus`, `memory`), i.e. what the scheduler allocates.
+- **`usage*`** — drive the actual `stress-ng` workload, i.e. what the task really consumes. Each defaults to its matching `request*` value.
+
+| Param               | Default              | Description                                             |
+|---------------------|----------------------|---------------------------------------------------------|
+| `--requestCpus`     | `1`                  | CPUs requested (sets `cpus` directive)                  |
+| `--requestMemory`   | `1 GB`               | Memory requested (sets `memory` directive)              |
+| `--requestDuration` | `60s`                | Default duration for `stress-ng` when `--usageDuration` is not set |
+| `--usageCpus`       | `requestCpus`        | Number of CPU workers used by `stress-ng`               |
+| `--usageMemory`     | `requestMemory`      | Memory actually allocated by `stress-ng`                |
+| `--usageDuration`   | `requestDuration`    | How long `stress-ng` runs                               |
 
 ## Requirements
 
